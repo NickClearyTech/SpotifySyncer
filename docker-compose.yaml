@@ -1,0 +1,57 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    env_file:
+      - .env
+    volumes:
+      - ./backend/spotifysyncer:/spotifysyncer/backend/spotifysyncer
+    ports:
+      - 8001:8000
+    command: [ 'bash', '-c', 'gunicorn --bind :8000 --workers 4 --reload wsgi:application' ]
+    depends_on:
+      - database
+      - elasticmq
+      - dynamodb-local
+  initializer:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    env_file:
+      - .env
+    volumes:
+      - ./backend/spotifysyncer:/spotifysyncer/backend/spotifysyncer
+    command: [ 'bash', '-c', 'python3 manage.py migrate' ]
+    depends_on:
+      - database
+  database:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_SERVER=database
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=spotifysyncer
+    ports:
+      - 5432:5432
+  elasticmq:
+    image: softwaremill/elasticmq
+    ports:
+      - 9324:9324
+  dynamodb-local:
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "dynamo_data:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
+volumes:
+  postgres_data:
+  dynamo_data:
