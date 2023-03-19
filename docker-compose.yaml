@@ -12,9 +12,10 @@ services:
       - 8001:8000
     command: [ 'bash', '-c', 'gunicorn --bind :8000 --workers 4 --reload wsgi:application' ]
     depends_on:
-      - database
+      - postgres
       - elasticmq
       - dynamodb-local
+      - initializer
   initializer:
     build:
       context: .
@@ -23,10 +24,10 @@ services:
       - .env
     volumes:
       - ./backend/spotifysyncer:/spotifysyncer/backend/spotifysyncer
-    command: [ 'bash', '-c', 'python3 manage.py migrate' ]
+    command: [ 'bash', '-c', 'python3 manage.py migrate && python3 manage.py runscript initializer' ]
     depends_on:
-      - database
-  database:
+      - postgres
+  postgres:
     image: postgres:13-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
