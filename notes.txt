@@ -1,2 +1,11 @@
 Helpful ask:
 https://github.com/spotipy-dev/spotipy/issues/555
+
+Get Spotify code:
+https://accounts.spotify.com/authorize?response_type=code&client_id=a98b190ae81745a68f3b2be525f6b0e7&redirect_uri=http://localhost:8001/callback
+
+Get token:
+curl -X POST -d "client_id=default&grant_type=convert_token&backend=spotify&token=<token>" http://localhost:8001/auth/convert-token
+
+Refresh Token:
+curl -X POST -d "grant_type=refresh_token&client_id=default&refresh_token=<your_refresh_token>" http://localhost:8001/auth/token

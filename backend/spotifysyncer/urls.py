@@ -6,6 +6,9 @@ from rest_framework import routers
 from django.urls import include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from spotifysyncer.views.callback import CallbackEndpoint
+from spotifysyncer.views.codetotoken import CodeToToken
+
 
 router = routers.SimpleRouter()
 urlpatterns = [
@@ -18,4 +21,6 @@ urlpatterns = [
     ),
     path("admin/", admin.site.urls),
     re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
+    path("callback/", CallbackEndpoint.as_view()),
+    path("codetotoken/", CallbackEndpoint.as_view())
 ]
