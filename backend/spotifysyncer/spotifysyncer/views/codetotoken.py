@@ -56,5 +56,9 @@ class CodeToToken(APIView):
 
         if not r.ok:
             logger.error(f"Error response converting spotify code to token: {r.json()}")
+            try:
+                return Reponse(r.json(), status=status.HTTP_400_BAD_REQUEST)
+            except:
+                return Response({"Error": "Error getting response from Spotify API"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(r.json())

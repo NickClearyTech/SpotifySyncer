@@ -22,5 +22,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path("callback/", CallbackEndpoint.as_view()),
-    path("codetotoken/", CodeToToken.as_view()),
+    path("api/v1/codetotoken/", CodeToToken.as_view()),
 ]
