@@ -6,6 +6,7 @@ from logging import getLogger
 
 logger = getLogger(__name__)
 
+
 class CallbackEndpoint(APIView):
     """
     View to handle the /callback url

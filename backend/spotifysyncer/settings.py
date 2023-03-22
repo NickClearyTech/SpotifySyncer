@@ -191,3 +191,7 @@ INITIAL_OAUTH_CLIENT_ID = os.environ.get("INITIAL_OAUTH_CLIENT_ID", "default")
 
 SOCIAL_AUTH_SPOTIFY_KEY = os.environ.get("SOCIAL_AUTH_SPOTIFY_KEY", "invalid")
 SOCIAL_AUTH_SPOTIFY_SECRET = os.environ.get("SOCIAL_AUTH_SPOTIFY_SECRET", "invalid")
+
+SPOTIFY_REDIRECT_URI = os.environ.get(
+    "SPOTIFY_REDIRECT_URI", "http://localhost:8001/callback"
+)
