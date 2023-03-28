@@ -46,9 +46,11 @@ INSTALLED_APPS = [
     "spotifysyncer",
     "django_filters",
     "drf_spectacular",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -180,6 +182,8 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
 }
 
+CORS_ALLOW_ALL_ORIGINS = True # TODO: Fix
+
 # Initial User
 INITIAL_USER_USERNAME = os.environ.get("INITIAL_USER_USERNAME", "system")
 INITIAL_USER_FIRSTNAME = os.environ.get("INITIAL_USER_FIRSTNAME", "System")
@@ -193,5 +197,5 @@ SOCIAL_AUTH_SPOTIFY_KEY = os.environ.get("SOCIAL_AUTH_SPOTIFY_KEY", "invalid")
 SOCIAL_AUTH_SPOTIFY_SECRET = os.environ.get("SOCIAL_AUTH_SPOTIFY_SECRET", "invalid")
 
 SPOTIFY_REDIRECT_URI = os.environ.get(
-    "SPOTIFY_REDIRECT_URI", "http://localhost:8001/callback"
+    "SPOTIFY_REDIRECT_URI", "http://localhost:4436/callback"
 )
