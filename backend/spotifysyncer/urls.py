@@ -20,7 +20,7 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("admin/", admin.site.urls),
-    re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
+    re_path(r"api/v1/auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path("api/v1/callback/", CallbackEndpoint.as_view()),
     path("api/v1/codetotoken/", CodeToToken.as_view()),
 ]
