@@ -12,7 +12,7 @@ export default {
   name: "CallBack",
   methods: {
     onLoad: async function() {
-     this.$cookies.get()
+     // this.$cookies.get();
 
       let code: string = this.$route.query.code;
       if (code == null) {
