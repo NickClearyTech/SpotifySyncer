@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import router from "./router/index"
+import {store} from "./store/index";
 
 // Vuetify
 import 'vuetify/styles'
@@ -19,4 +20,5 @@ const vuetify = createVuetify({
     }
 })
 
-createApp(App).use(router).use(vuetify).use(VueCookies).mount('#app')
+
+createApp(App).use(store).use(router).use(vuetify).use(VueCookies).mount('#app')
