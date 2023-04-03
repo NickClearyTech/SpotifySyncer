@@ -1,0 +1,5 @@
+{
+    "python.analysis.typeCheckingMode": "off",
+    "python.pythonPath": "/home/nicleary/.pyenv/versions/spotifysyncer/bin/python",
+    "python.defaultInterpreterPath": "/home/nicleary/.pyenv/versions/spotifysyncer/bin/python"
+}

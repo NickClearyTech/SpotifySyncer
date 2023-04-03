@@ -182,7 +182,7 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
 }
 
-CORS_ALLOW_ALL_ORIGINS = True # TODO: Fix
+CORS_ALLOW_ALL_ORIGINS = True  # TODO: Fix
 
 # Initial User
 INITIAL_USER_USERNAME = os.environ.get("INITIAL_USER_USERNAME", "system")
@@ -199,3 +199,8 @@ SOCIAL_AUTH_SPOTIFY_SECRET = os.environ.get("SOCIAL_AUTH_SPOTIFY_SECRET", "inval
 SPOTIFY_REDIRECT_URI = os.environ.get(
     "SPOTIFY_REDIRECT_URI", "http://localhost:4436/callback"
 )
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "abc123")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "abc123")
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-2")
+AWS_DYNAMODB_ENDPOINT_URL = os.environ.get("AWS_DYNAMODB_ENDPOINT_URL", None)

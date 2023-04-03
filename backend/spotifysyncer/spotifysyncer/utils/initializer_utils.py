@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from oauth2_provider.models import Application
 from settings import *
 
+from spotifysyncer.dynamodb.setup_tables import create_user_info_table
+
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -45,3 +47,7 @@ def check_and_create_oauth_application() -> None:
     )
     application.save()
     logger.info("Initial OAuth application created")
+
+
+def run_dynamodb_migrations():
+    create_user_info_table()
