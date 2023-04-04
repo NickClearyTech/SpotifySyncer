@@ -8,6 +8,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from spotifysyncer.views.callback import CallbackEndpoint
 from spotifysyncer.views.codetotoken import CodeToToken
+from spotifysyncer.views.refresh_token_upload import RefreshTokenUpload
 
 
 router = routers.SimpleRouter()
@@ -23,4 +24,5 @@ urlpatterns = [
     re_path(r"api/v1/auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path("api/v1/callback/", CallbackEndpoint.as_view()),
     path("api/v1/codetotoken/", CodeToToken.as_view()),
+    path("api/v1/refreshtoken/", RefreshTokenUpload.as_view())
 ]
