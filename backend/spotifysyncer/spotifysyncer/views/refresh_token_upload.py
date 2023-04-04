@@ -30,5 +30,8 @@ class RefreshTokenUpload(APIView):
                 serialized_request.errors, status=status.HTTP_400_BAD_REQUEST
             )
 
-        return Response({})
+        user = request.user
+        logger.error(user.id)
+
+        return Response({"user": user.id})
 
