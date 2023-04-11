@@ -21,4 +21,4 @@ RUN mkdir /spotifysyncer/app
 COPY ./backend /spotifysyncer/backend
 WORKDIR /spotifysyncer/backend/spotifysyncer
 
-ENTRYPOINT ["./test_entrypoint.sh"]
+ENTRYPOINT ["./test-entrypoint.sh"]
