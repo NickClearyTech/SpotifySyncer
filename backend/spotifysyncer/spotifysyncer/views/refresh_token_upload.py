@@ -34,4 +34,3 @@ class RefreshTokenUpload(APIView):
         logger.error(user.id)
 
         return Response({"user": user.id})
-

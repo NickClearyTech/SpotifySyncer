@@ -24,5 +24,5 @@ urlpatterns = [
     re_path(r"api/v1/auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path("api/v1/callback/", CallbackEndpoint.as_view()),
     path("api/v1/codetotoken/", CodeToToken.as_view()),
-    path("api/v1/refreshtoken/", RefreshTokenUpload.as_view())
+    path("api/v1/refreshtoken/", RefreshTokenUpload.as_view()),
 ]
