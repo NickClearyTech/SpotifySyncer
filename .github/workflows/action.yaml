@@ -144,7 +144,7 @@ jobs:
         if: always()
 
   codeql:
-    needs: build-backend
+    needs: [build-frontend, build-backend]
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
