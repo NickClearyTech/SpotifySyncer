@@ -139,7 +139,7 @@ jobs:
         run: docker load < syncer-backend.tar.gz
 
       - name: Tag docker image
-        run: docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend:latest && docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend${{ github.run_number }}
+        run: docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend:latest && docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend:${{ github.run_number }}
 
       - name: Push to ghcr
         run: docker push ghcr.io/nickclearytech/spotify_syncer_backend:latest && docker push ghcr.io/nickclearytech/spotify_syncer_backend:${{ github.run_number }}
