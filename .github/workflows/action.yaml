@@ -22,6 +22,19 @@ jobs:
       - name: Run tests
         run: docker run --name pytest syncer_backend_test:${{ github.run_number }}
 
+  test-frontend:
+    # Runs pytest and black formatting tool
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker build
+        run: docker build -t syncer_frontend_test:${{ github.run_number }} -f Dockerfile.frontend.vitest .
+
+      - name: Run tests
+        run: docker run --name pytest syncer_frontend_test:${{ github.run_number }}
+
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +51,23 @@ jobs:
         with:
           name: compressed_image_backend
           path: syncer-backend.tar.gz
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker build
+        run: docker build -t syncer_frontend:${{ github.run_number }} -f Dockerfile.frontend.prod .
+
+      - name: Compress image
+        run: docker save syncer_frontend:${{ github.run_number }} | gzip > syncer-frontend.tar.gz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: compressed_image_frontend
+          path: syncer-frontend.tar.gz
 
   trivy-backend:
     needs: build-backend
@@ -58,6 +88,34 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'syncer_backend:${{ github.run_number }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  trivy-frontend:
+    needs: build-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        name: Download image from artifact
+        with:
+          name: compressed_image_frontend
+
+      - name: Load image from artifact
+        run: docker load < syncer-frontend.tar.gz
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'syncer_frontend:${{ github.run_number }}'
           format: 'sarif'
           output: 'trivy-results.sarif'
           ignore-unfixed: true
@@ -144,6 +202,35 @@ jobs:
       - name: Push to ghcr
         run: docker push ghcr.io/nickclearytech/spotify_syncer_backend:latest && docker push ghcr.io/nickclearytech/spotify_syncer_backend:${{ github.run_number }}
 
+  publish-frontend:
+    runs-on: ubuntu-latest
+    needs: [ trivy-frontend, codeql, semgrep, test-frontend ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.PACKAGE_TOKEN }}
+
+      - uses: actions/download-artifact@v3
+        name: Download image from artifact
+        with:
+          name: compressed_image_frontend
+
+      - name: Load image from artifact
+        run: docker load < syncer-backend.tar.gz
+
+      - name: Tag docker image
+        run: docker tag syncer_frontend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_frontend:latest && docker tag syncer_frontend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_frontend:${{ github.run_number }}
+
+      - name: Push to ghcr
+        run: docker push ghcr.io/nickclearytech/spotify_syncer_frontend:latest && docker push ghcr.io/nickclearytech/spotify_syncer_frontend:${{ github.run_number }}
+
+
   cleanup:
     runs-on: ubuntu-latest
     needs: publish-backend
@@ -151,5 +238,9 @@ jobs:
       - name: Delete artifact
         uses: geekyeggo/delete-artifact@v1
         with:
-          name: compressed_image_bakcned
+          name: compressed_image_backend
+      - name: Delete artifact
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: compressed_image_frontend
 

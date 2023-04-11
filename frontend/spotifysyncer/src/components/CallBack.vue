@@ -22,10 +22,11 @@ export default {
         return;
       }
 
-      let code: string = this.$route.query.code;
-      if (code == null) {
+      if (this.$route.query.code == null) {
         return;
       }
+
+      let code: string = this.$route!.query.code.toString();
 
       // Convert Spotify Code to Spotify Token
       let processedToken: [boolean, string, string] = await GetSpotifyTokenFromCode(code);
@@ -54,7 +55,7 @@ export default {
   },
   data() {
     return {
-      success: null
+      success: false
     }
   }
 }

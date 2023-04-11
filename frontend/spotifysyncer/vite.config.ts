@@ -27,5 +27,8 @@ export default defineConfig(({command, mode}) => {
         }
       }
     },
+    test: {
+      
+    }
   }
 });

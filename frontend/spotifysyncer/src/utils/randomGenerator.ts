@@ -1,6 +1,6 @@
 // dec2hex :: Integer -> String
 // i.e. 0-255 -> '00'-'ff'
-function dec2hex (dec) {
+function dec2hex (dec: any) {
     return dec.toString(16).padStart(2, "0")
 }
 
