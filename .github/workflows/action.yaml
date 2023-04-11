@@ -1,0 +1,156 @@
+name: "Main Action"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+
+jobs:
+
+  test-backend:
+    # Runs pytest and black formatting tool
+    runs-on: nicleary-ubuntu-k8s
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker build
+        run: docker build -t syncer_backend_test:${{ github.run_number }} -f Dockerfile.backend.pytest .
+
+      - name: Run tests
+        run: docker run --name pytest syncer_backend_test:${{ github.run_number }}
+
+  build-backend:
+    needs: test-backend
+    runs-on: nicleary-ubuntu-k8s
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker build
+        run: docker build -t syncer_backend:${{ github.run_number }} -f Dockerfile.backend .
+
+      - name: Compress image
+        run: docker save syncer_backend:${{ github.run_number }} | gzip > syncer-backend.tar.gz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: compressed_image_backend
+          path: syncer-backend.tar.gz
+
+  trivy-backend:
+    needs: build-backend
+    runs-on: nicleary-ubuntu-k8s
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        name: Download image from artifact
+        with:
+          name: compressed_image_backend
+
+      - name: Load image from artifact
+        run: docker load < syncer-backend.tar.gz
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'syncer_backend:${{ github.run_number }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  semgrep:
+    name: Semgrep
+    runs-on: nicleary-ubuntu-k8s
+    needs: build-backend
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+    container:
+      image: returntocorp/semgrep
+    steps:
+      - uses: actions/checkout@v3
+      - run: semgrep ci --sarif --output=semgrep.sarif
+
+      - name: Upload SARIF file for GitHub Advanced Security Dashboard
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: semgrep.sarif
+        if: always()
+
+  codeql:
+    needs: build-backend
+    name: Analyze
+    runs-on: nicleary-ubuntu-k8s
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python' , 'javascript']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        # queries: security-and-quality
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+  publish-backend:
+    runs-on: nicleary-ubuntu-k8s
+    needs: [trivy, codeql, semgrep]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.PACKAGE_TOKEN }}
+
+      - uses: actions/download-artifact@v3
+        name: Download image from artifact
+        with:
+          name: compressed_image_backend
+
+      - name: Load image from artifact
+        run: docker load < syncer_backend.tar.gz
+
+      - name: Tag docker image
+        run: docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend:latest && docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend${{ github.run_number }}
+
+      - name: Push to ghcr
+        run: docker push ghcr.io/nickclearytech/spotify_syncer_backend:latest && docker push ghcr.io/nickclearytech/spotify_syncer_backend:${{ github.run_number }}
+
+  cleanup:
+    runs-on: nicleary-ubuntu-k8s
+    needs: publish-backend
+    steps:
+      - name: Delete artifact
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: compressed_image_bakcned
+

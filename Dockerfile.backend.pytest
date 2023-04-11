@@ -12,7 +12,13 @@ RUN adduser --disabled-password --gecos '' app
 
 COPY ./backend/requirements.txt .
 RUN pip3 install --upgrade pip && pip3 install --no-cache-dir -r requirements.txt
+
+COPY ./backend/spotifysyncer/test-requirements.txt .
+RUN pip3 install --no-cache-dir -r test-requirements.txt
+
 RUN mkdir /spotifysyncer/app
 
 COPY ./backend /spotifysyncer/backend
 WORKDIR /spotifysyncer/backend/spotifysyncer
+
+ENTRYPOINT ["./test_entrypoint.sh"]
