@@ -97,7 +97,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'python' , 'javascript']
+        language: [ 'python' , 'typescript']
 
     steps:
     - name: Checkout repository
@@ -136,7 +136,7 @@ jobs:
           name: compressed_image_backend
 
       - name: Load image from artifact
-        run: docker load < syncer_backend.tar.gz
+        run: docker load < syncer-backend.tar.gz
 
       - name: Tag docker image
         run: docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend:latest && docker tag syncer_backend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_backend${{ github.run_number }}
