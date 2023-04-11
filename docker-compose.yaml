@@ -13,8 +13,6 @@ services:
     command: [ 'bash', '-c', 'gunicorn --bind :8000 --workers 4 --reload wsgi:application' ]
     depends_on:
       - postgres
-      - elasticmq
-      - dynamodb-local
       - initializer
   initializer:
     build:
