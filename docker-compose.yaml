@@ -39,21 +39,6 @@ services:
       - POSTGRES_DB=spotifysyncer
     ports:
       - 5432:5432
-  elasticmq:
-    image: softwaremill/elasticmq
-    ports:
-      - 9324:9324
-  dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-    image: "amazon/dynamodb-local:latest"
-    container_name: dynamodb-local
-    ports:
-      - "8000:8000"
-    user: root
-    volumes:
-      - "dynamo_data:/home/dynamodblocal/data"
-    working_dir: /home/dynamodblocal
 
 volumes:
   postgres_data:
-  dynamo_data:

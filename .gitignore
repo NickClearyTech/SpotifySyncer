@@ -6,6 +6,8 @@ __pycache__/
 *.idea/
 *.ipynb
 
+frontend/spotifysyncer/src/environment/.env.development
+
 # C extensions
 *.so
 
