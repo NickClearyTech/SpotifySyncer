@@ -23,7 +23,6 @@ jobs:
         run: docker run --name pytest syncer_backend_test:${{ github.run_number }}
 
   build-backend:
-    needs: test-backend
     runs-on: nicleary-ubuntu-k8s
     steps:
       - name: Checkout
