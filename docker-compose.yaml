@@ -1,6 +1,6 @@
 version: "3"
 services:
-  app:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile.backend
@@ -37,6 +37,14 @@ services:
       - POSTGRES_DB=spotifysyncer
     ports:
       - 5432:5432
+  frontend:
+    build:
+      dockerfile: Dockerfile.frontend.dev
+      context: .
+    ports:
+      - 4436:4436
+    volumes:
+      - ./frontend/spotifysyncer:/syncer-frontend
 
 volumes:
   postgres_data:

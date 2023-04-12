@@ -222,7 +222,7 @@ jobs:
           name: compressed_image_frontend
 
       - name: Load image from artifact
-        run: docker load < syncer-backend.tar.gz
+        run: docker load < syncer-frontend.tar.gz
 
       - name: Tag docker image
         run: docker tag syncer_frontend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_frontend:latest && docker tag syncer_frontend:${{ github.run_number }} ghcr.io/nickclearytech/spotify_syncer_frontend:${{ github.run_number }}

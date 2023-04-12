@@ -8,7 +8,7 @@ export default {
       let state: string = generateState();
       // Set cookies to be sure no MoTM attack
       this.$cookies.set("spotify_flow_code", state);
-      let url: string = `https://accounts.spotify.com/authorize?response_type=code&redirect_uri=${import.meta.env.SPOTIFY_REDIRECT_URI}&client_id=${import.meta.env.VITE_API_FULL_URL}&state=${state}`;
+      let url: string = `https://accounts.spotify.com/authorize?response_type=code&redirect_uri=${import.meta.env.VITE_SPOTIFY_REDIRECT_URI}&client_id=${import.meta.env.VITE_SPOTIFY_CLIENT_ID}&state=${state}`;
       // Redirect to spotify auth page
       window.location.replace(url);
     }
