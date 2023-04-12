@@ -45,6 +45,27 @@ services:
       - 4436:4436
     volumes:
       - ./frontend/spotifysyncer:/syncer-frontend
+  rabbit:
+    image: rabbitmq:3.11
+    hostname: rabbit
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=bigpassword
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    command: celery -A celery_settings worker -l INFO
+    volumes:
+      - ./backend/spotifysyncer:/spotifysyncer/backend/spotifysyncer
+    env_file:
+      - .env
+    depends_on:
+      - rabbit
 
 volumes:
   postgres_data:
+  rabbitmq:

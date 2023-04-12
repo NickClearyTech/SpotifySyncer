@@ -15,3 +15,8 @@ psycopg2-binary==2.9.5
 
 # Webserver
 gunicorn==20.1.0
+
+# Celery
+celery==5.2.3
+msgpack-python==0.5.6
+django-celery-results==2.1.0

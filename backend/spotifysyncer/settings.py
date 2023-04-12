@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "corsheaders",
+    "django_celery_results"
 ]
 
 MIDDLEWARE = [
@@ -183,6 +184,17 @@ SPECTACULAR_SETTINGS = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True  # TODO: Fix
+
+# Celery Settings
+CELERY_TASK_TRACK_STARTED = True
+BROKER_URL = 'amqp://rabbit:5672//'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACKS_LATE = True
+CELERYD_PREFETCH_MULTIPLIER = 1
+
 
 # Initial User
 INITIAL_USER_USERNAME = os.environ.get("INITIAL_USER_USERNAME", "system")
