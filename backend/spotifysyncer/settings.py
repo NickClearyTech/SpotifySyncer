@@ -187,7 +187,7 @@ CORS_ALLOW_ALL_ORIGINS = True  # TODO: Fix
 
 # Celery Settings
 CELERY_TASK_TRACK_STARTED = True
-BROKER_URL = "amqp://rabbit:5672//"
+BROKER_URL = f"amqp://{os.environ.get('RABBIT_USER', 'admin')}:{os.environ.get('RABBIT_PASS', 'bigpassword')}@{os.environ.get('RABBIT_HOST', 'rabbit')}:{os.environ.get('RABBIT_PORT', '5672')}//"
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
