@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "corsheaders",
-    "django_celery_results"
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -187,11 +187,11 @@ CORS_ALLOW_ALL_ORIGINS = True  # TODO: Fix
 
 # Celery Settings
 CELERY_TASK_TRACK_STARTED = True
-BROKER_URL = 'amqp://rabbit:5672//'
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+BROKER_URL = "amqp://rabbit:5672//"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 CELERY_ACKS_LATE = True
 CELERYD_PREFETCH_MULTIPLIER = 1
 
@@ -212,7 +212,6 @@ SPOTIFY_REDIRECT_URI = os.environ.get(
     "SPOTIFY_REDIRECT_URI", "http://localhost:4436/callback"
 )
 
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "abc123")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "abc123")
-AWS_REGION = os.environ.get("AWS_REGION", "us-east-2")
-AWS_DYNAMODB_ENDPOINT_URL = os.environ.get("AWS_DYNAMODB_ENDPOINT_URL", None)
+ENCRYPTION_KEY: str = os.environ.get(
+    "ENCRYPTION_KEY", "abc123"
+)
