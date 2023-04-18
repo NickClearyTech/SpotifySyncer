@@ -1,6 +1,6 @@
 from cryptography.fernet import Fernet
-
 from settings import ENCRYPTION_KEY
+
 
 def encrypt(message: str) -> bytes:
     f = Fernet(ENCRYPTION_KEY.encode("utf-8"))

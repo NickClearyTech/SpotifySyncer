@@ -212,6 +212,4 @@ SPOTIFY_REDIRECT_URI = os.environ.get(
     "SPOTIFY_REDIRECT_URI", "http://localhost:4436/callback"
 )
 
-ENCRYPTION_KEY: str = os.environ.get(
-    "ENCRYPTION_KEY", "abc123"
-)
+ENCRYPTION_KEY: str = os.environ.get("ENCRYPTION_KEY", "abc123")

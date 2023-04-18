@@ -21,3 +21,10 @@ class RefreshTokenUploadSerializer(serializers.Serializer):
     )
 
     expiry = serializers.DateTimeField(required=True)
+
+
+class RefreshTokenUploadResultSerializer(serializers.Serializer):
+    success = serializers.BooleanField(default=False, allow_null=False)
+    message = serializers.CharField(
+        max_length=128, min_length=4, required=False, allow_null=True
+    )
