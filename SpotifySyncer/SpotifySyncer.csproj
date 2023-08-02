@@ -9,11 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
         <None Remove=".gitignore" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNet.Security.OAuth.Spotify" Version="7.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.5" />

@@ -23,6 +23,14 @@ builder.Services
     .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
 
+builder.Services.AddAuthentication().AddSpotify(options =>
+{
+    options.ClientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
+    options.ClientSecret = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_KEY");
+    options.CallbackPath = "/callback";
+    options.SaveTokens = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

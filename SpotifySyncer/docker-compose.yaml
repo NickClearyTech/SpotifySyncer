@@ -4,10 +4,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    environment:
-      - ASPNETCORE_URLS=https://+;http://+;
+    env_file:
+      - .env
     volumes:
       - .:/src
+      - ~/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
     ports:
       - 5104:5104
     command: ["dotnet", "watch"]
